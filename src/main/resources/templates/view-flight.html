@@ -2,9 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${flight.flightNumber}"></title>
+    <title id="PageTitle" th:text="${flight.flightNumber}"></title>
+    <object th:include="fragments/fragment :: css"></object>
+    <object th:include="fragments/fragment :: js"></object>
 </head>
 <body>
+<nav th:replace="fragments/fragment :: navbar(title='View Flight')"></nav>
     <a th:href="@{/flight/delete/{id}(id=${flight.id})}">Remove</a>
     <a th:href="@{/flight/update/{id}(id=${flight.id})}">Edit</a>
     <hr>

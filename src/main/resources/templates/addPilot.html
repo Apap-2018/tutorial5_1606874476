@@ -2,9 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Add Pilot</title>
+    <title id="pageTitle">Add Pilot</title>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
 </head>
 <body>
+<nav th:replace="fragments/fragment :: navbar(title='Add Pilot')"></nav>
     <h1>Hello!</h1>
     <h3>Tambah Pilot</h3>
     <form th:action="@{/pilot/add}" th:object="${pilot}" method="POST">

@@ -67,6 +67,10 @@ public class PilotModel extends AbstractEntity implements Serializable {
     public void setPilotFlights(List<FlightModel> pilotFlights) {
         this.pilotFlights = pilotFlights;
     }
+    
+    public void addPilotFlights(FlightModel flightModel) {
+        this.pilotFlights.add(flightModel);
+    }
 
     @Override
     public String toString() {

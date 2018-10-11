@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Update</title>
+    <title id="pageTitle">Update</title>
+    <object th:include = "fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include = "fragments/fragment :: js" th:remove="tag"></object>
 </head>
 <body>
+<nav th:replace="fragments/fragment :: navbar(title='Update')"></nav>
 <h2>Data berhasil diupdate!</h2>
 </body>
 </html>

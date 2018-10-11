@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Hello!</h1>
+    <h3>Tambah Pilot</h3>
+    <td><a th:href="@{/pilot/add}"></a></td>
+
+    <h3>Cari pilot berdasarkan nomor lisensi</h3>
+    <form th:action="@{/pilot/view}" method="GET">
+        <label>License Number</label>
+        <input type="text" name="licenseNumber" />
+        <input type="submit" value="Cari">
+    </form>
+</body>
+</html>

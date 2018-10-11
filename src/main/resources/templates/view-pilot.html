@@ -1,35 +1,65 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <title th:text="${pilot.licenseNumber}"></title>
+    <title id="pageTitle">View Pilot</title>
+    <object th:include = "fragments/fragment :: css" th:remove = "tag"></object>
+    <object th:include = "fragments/fragment :: js" th:remove = "tag"></object>
+
 </head>
+
 <body>
+    <nav th:replace="fragments/fragment :: navbar"></nav>
+    <h2> View Pilot</h2>
     <h3 th:text="'Pilot License Number : ' + ${pilot.licenseNumber}"></h3>
-    <h3 th:text="'Name :' + ${pilot.name}"></h3>
-    <h3 th:text="'Fly Hour: ' + ${pilot.flyHour}"></h3>
-    <br>
-    <a th:href="@{/pilot/update/{id}(id=${pilot.id})}">Edit Pilot</a>
-    <a th:href="@{/pilot/delete/{id}(id=${pilot.id})}">Delete Pilot</a>
-    <a th:href="@{/flight/add/{licenseNumber}(licenseNumber=${pilot.licenseNumber})}">Add Flight</a>
-    <hr>
+    <h3 th:text="'Name : ' + ${pilot.name}"></h3>
+    <h3 th:text="'Fly Hour : ' + ${pilot.flyHour}"></h3>
+    <h3 th:if="${pilot.flyHour} >= 100">Status: Pilot Senior</h3>
+    <h3 th:unless="${pilot.flyHour} >= 100">Status: Pilot Junior</h3>
+
     <table>
         <tr>
-            <th>Number</th>
-            <th>Origin</th>
-            <th>Destination</th>
-            <th>Time</th>
-            <th>Remove</th>
-            <th>Edit Flight</th>
-        </tr>
-        <tr th:each="flight : ${pilot.getPilotFlights()}">
-            <td><a th:href="@{/flight/view/{id}(id=${flight.id})}" th:text="${flight.flightNumber}"></a></td>
-            <td th:text="${flight.origin}"></td>
-            <td th:text="${flight.destination}"></td>
-            <td th:text="${flight.time}"></td>
-            <td><a th:href="@{/flight/delete/{id}(id=${flight.id})}">Remove</a></td>
-            <td><a th:href="@{/flight/update/{id}(id=${flight.id})}">Edit</a></td>
+            <td>
+                <form th:action="@{/pilot/update/} + ${pilot.licenseNumber}">
+                    <button type="submit" class="btn btn-info">Update Pilot</button>
+                </form>
+            </td>
+            <td>
+                <form th:action="@{/pilot/delete/} + ${pilot.licenseNumber}">
+                    <button type="submit" class="btn button btn-info">Delete Pilot</button>
+                </form>
+            </td>
         </tr>
     </table>
+
+    <h2>Flight : </h2>
+    <div th:if="${flight.isEmpty()}">
+        <h4>No Flight Yet</h4>
+    </div>
+    <div th:if="${!flight.isEmpty()}">
+        <form th:action="@{/flight/delete/}" th:object = "${pilot}" method="POST">
+            <table border = "I">
+                <caption>Flight</caption>
+                <thead>
+                <tr th:each="flight,iterationStatus : *{pilotFlight}">
+                    <td th:text="${iterationStatus.count}"></td>
+                    <td th:text="${flight.flightNumber}"></td>
+                    <td th:text="${flight.origin}"></td>
+                    <td th:text="${flight.destination}"></td>
+                    <td th:text="${flight.time}"></td>
+                    <td><a th:href="@{|/flight/update/${flight.id}|}">Update</a></td>
+                    <td>
+                    <input type="checkbox" th:field="*{pilotFlight}" th:value="${flight.id}"/>
+                    <label th:for="${#ids.prev('pilotFlight')}">Hapus</label>
+                </td>
+                </tr>
+                </thead>
+            </table>
+            <button  type="submit" class="btn button btn-danger">Delete Selected File</button>
+        </form>
+    </div>
+    <form th:action = "@{/flight/add/}" + ${pilot.licenseNumber}>
+        <button value="submit" class="btn button btn-morning"
+    </form>
 </body>
 </html>

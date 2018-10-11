@@ -5,13 +5,19 @@ import com.apap.tutorial4.model.PilotModel;
 import com.apap.tutorial4.service.IFlightService;
 import com.apap.tutorial4.service.IPilotService;
 import com.apap.tutorial4.service.PilotService;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class FlightController {
@@ -35,6 +41,24 @@ public class FlightController {
         model.addAttribute("flight", flight);
         return "addFlight";
     }
+    
+
+    @RequestMapping(value="/flight/add/{licenseNumber}", params={"addRow"}, method = RequestMethod.POST)
+    public String addRow(@ModelAttribute PilotModel pilot, BindingResult bindingResult, Model model) {
+        pilot.getPilotFlights().add(new FlightModel());
+        model.addAttribute("pilot", pilot);
+        return "addFlight";
+    }
+
+    @RequestMapping(value="/flight/add/{licenseNumber}", method = RequestMethod.POST, params={"removeRow"})
+    public String removeRow(@ModelAttribute PilotModel pilot, final BindingResult bindingResult, final HttpServletRequest req, Model model) {
+        final Integer rowId = Integer.valueOf(req.getParameter("removeRow"));
+        pilot.getPilotFlights().remove(rowId.intValue());
+
+        model.addAttribute("pilot", pilot);
+        return "addFlight";
+    }
+
 
     @RequestMapping(value = "/flight/add", method = RequestMethod.POST)
     private String addSubmitFlight(@ModelAttribute FlightModel newFlight) {
@@ -48,10 +72,19 @@ public class FlightController {
         model.addAttribute("flight", flight);
         return "view-flight";
     }
+    
+    @RequestMapping(value = "/flight/view", method = RequestMethod.GET)
+    private String viewFlightByName(@RequestParam("flightNumber") String flightNumber, Model model) {
+        List<FlightModel> flight = flightService.findFlightByName(flightNumber);
+        model.addAttribute("flight", flight);
+        return "view-flight";
+    }
 
-    @RequestMapping(value = "/flight/delete/{id}", method = RequestMethod.GET)
-    private String deleteFlight(@PathVariable(value = "id") Long id) {
-        flightService.deleteFlightById(id);
+    @RequestMapping(value = "/flight/delete", method = RequestMethod.POST)
+    private String deleteFlight(@ModelAttribute PilotModel pilot) {
+        for(FlightModel flight : pilot.getPilotFlights()) {
+            flightService.deleteFlightById(flight.getId());
+        }
         return "delete";
     }
 
